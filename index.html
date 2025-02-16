@@ -1,16 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrendScope - Secure Instagram Login</title>
+  <title>TrendScope - Facebook Login</title>
   <script>
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : process.env.FB_APP_ID, // Use environment variable
+        appId      : process.env.FB_APP_ID,
         cookie     : true,
         xfbml      : true,
-        version    : 'v18.0'
+        version    : process.env.FB_APP_VERSION
       });
       FB.AppEvents.logPageView();
     };
@@ -32,11 +33,20 @@
 
   <script>
     function checkLoginState() {
-      FB.getLoginStatus(statusChangeCallback);
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
     }
+
     function statusChangeCallback(response) {
-      document.getElementById('status').textContent =
-        response.status === 'connected' ? 'Logged in!' : 'Please log in.';
+      if (response.status === 'connected') {
+        const { accessToken, userID } = response.authResponse;
+        document.getElementById('status').innerHTML = `Logged in as User ${userID}`;
+      } else if (response.status === 'not_authorized') {
+        document.getElementById('status').innerHTML = 'Please authorize the app.';
+      } else {
+        document.getElementById('status').innerHTML = 'Please log into Facebook.';
+      }
     }
   </script>
 </body>
