@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrendScope - Secure Instagram Login</title>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : process.env.FB_APP_ID, // Use environment variable
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v18.0'
+      });
+      FB.AppEvents.logPageView();
+    };
+
+    (function(d, s, id){
+       if (d.getElementById(id)) return;
+       var js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       d.getElementsByTagName(s)[0].parentNode.insertBefore(js, null);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+</head>
+<body>
+  <h1>Welcome to TrendScope</h1>
+  <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+    Login with Facebook
+  </fb:login-button>
+  <div id="status"></div>
+
+  <script>
+    function checkLoginState() {
+      FB.getLoginStatus(statusChangeCallback);
+    }
+    function statusChangeCallback(response) {
+      document.getElementById('status').textContent =
+        response.status === 'connected' ? 'Logged in!' : 'Please log in.';
+    }
+  </script>
+</body>
+</html>
